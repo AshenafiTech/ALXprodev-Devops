@@ -22,4 +22,4 @@ cat "$OUTPUT_CSV"
 echo
 
 # Calculate averages using awk (skip header)
-awk -F, 'NR>1 {h+=$2; w+=$3; n++} END {if(n>0) printf "Average Height: %.2f m\nAverage Weight: %.2f kg\n", h/n, w/n}' "$OUTPUT_CSV"
+awk -F, '{print}' "$OUTPUT_CSV" | sed '1d' | awk -F, '{h+=$2; w+=$3; n++} END {if(n>0) printf "Average Height: %.2f m\nAverage Weight: %.2f kg\n", h/n, w/n}'
