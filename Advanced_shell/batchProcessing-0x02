@@ -1,0 +1,16 @@
+#!/bin/bash
+
+POKEMONS=("Bulbasaur" "Ivysaur" "Venusaur" "Charmander" "Charmeleon")
+API_URL="https://pokeapi.co/api/v2/pokemon"
+ERROR_FILE="errors.txt"
+
+for name in "${POKEMONS[@]}"; do
+    lower_name=$(echo "$name" | awk '{print tolower($0)}')
+    output_file="${lower_name}.json"
+    curl -sS "${API_URL}/${lower_name}" -o "$output_file"
+    if [ $? -ne 0 ]; then
+        echo "Failed to fetch data for $name at $(date)" >> "$ERROR_FILE"
+        rm -f "$output_file"
+    fi
+    sleep 2
+done
