@@ -4,7 +4,11 @@ DATA_FILE="data.json"
 
 name=$(jq -r '.name' "$DATA_FILE" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
 type=$(jq -r '.types[0].type.name' "$DATA_FILE" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
-formatted_weight=$(jq -r '.weight' "$DATA_FILE" | awk '{printf "%.1f", $1/10}')
-formatted_height=$(jq -r '.height' "$DATA_FILE" | awk '{printf "%.1f", $1/10}')
+weight=$(jq -r '.weight' "$DATA_FILE" | awk '{printf "%.1f", $1/10}')
+height=$(jq -r '.height' "$DATA_FILE" | awk '{printf "%.1f", $1/10}')
+
+# Remove trailing .0 if present
+formatted_weight=$(echo "$weight" | sed 's/\.0$//')
+formatted_height=$(echo "$height" | sed 's/\.0$//')
 
 echo "$name is of type $type, weighs ${formatted_weight}kg, and is ${formatted_height}m tall."
