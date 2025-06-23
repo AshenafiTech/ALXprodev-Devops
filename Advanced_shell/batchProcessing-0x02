@@ -9,10 +9,19 @@ ERROR_FILE="errors.txt"
 for name in "${POKEMONS[@]}"; do
     lower_name=$(echo "$name" | awk '{print tolower($0)}')
     output_file="${lower_name}.json"
-    curl -sS "${API_URL}/${lower_name}" -o "$output_file"
-    if [ $? -ne 0 ]; then
-        echo "Failed to fetch data for $name at $(date)" >> "$ERROR_FILE"
+    attempt=1
+    success=0
+    while [ $attempt -le 3 ]; do
+        curl -sS "${API_URL}/${lower_name}" -o "$output_file"
+        if [ $? -eq 0 ] && [ -s "$output_file" ]; then
+            success=1
+            break
+        fi
+        attempt=$((attempt + 1))
+        sleep 1
+    done
+    if [ $success -ne 1 ]; then
+        echo "Failed to fetch data for $name after 3 attempts at $(date)" >> "$ERROR_FILE"
         rm -f "$output_file"
     fi
     sleep 2
-done
