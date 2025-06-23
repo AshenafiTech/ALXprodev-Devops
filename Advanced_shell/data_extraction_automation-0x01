@@ -6,8 +6,11 @@ file="data.json"
 # Extract and format data using jq, sed, and awk
 name=$(jq -r '.name' "$file" | sed 's/.*/\u&/')
 type=$(jq -r '.types[0].type.name' "$file" | sed 's/.*/\u&/')
-weight=$(jq -r '.weight' "$file" | awk '{printf "%.1f", $1 / 10}')
-height=$(jq -r '.height' "$file" | awk '{printf "%.1f", $1 / 10}')
+weight=$(jq -r '.weight' "$file")
+height=$(jq -r '.height' "$file")
+
+formatted_weight=$(awk "BEGIN {printf \"%.1f\", $weight / 10}")
+formatted_height=$(awk "BEGIN {printf \"%.1f\", $height / 10}")
 
 # Output the formatted sentence
-echo "$name is of type $type, weighs ${weight}kg, and is ${height}m tall."
+echo "$name is of type $type, weighs ${formatted_weight}kg, and is ${formatted_height}m tall."
