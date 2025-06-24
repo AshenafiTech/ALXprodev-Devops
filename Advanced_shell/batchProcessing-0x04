@@ -35,3 +35,6 @@ done
 while jobs %%; do
     sleep
 done
+
+# Cleanup: kill any remaining background jobs (if any)
+jobs -p | xargs -r kill 2>/dev/null
